@@ -17,7 +17,7 @@
           ];
         };
         packages.default = pkgs.stdenv.mkDerivation {
-          name = "main";
+          name = "Zix";
           src = ./.;
 
           XDG_CACHE_HOME = "${placeholder "out"}";
