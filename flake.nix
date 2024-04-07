@@ -13,7 +13,9 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             zig
-            raylib
+            # raylib
+            # libGL
+            # libX11
           ];
         };
         packages.default = pkgs.stdenv.mkDerivation {

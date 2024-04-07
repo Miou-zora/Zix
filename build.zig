@@ -16,13 +16,32 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const exe = b.addExecutable(.{
-        .name = "Zix",
+        .name = "zigraylib",
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.
         .root_source_file = .{ .path = "src/main.zig" },
         .target = target,
         .optimize = optimize,
     });
+
+    const raylib_optimize = b.option(
+        std.builtin.OptimizeMode,
+        "raylib-optimize",
+        "Prioritize performance, safety, or binary size (-O flag), defaults to value of optimize option",
+    ) orelse optimize;
+
+    const strip = b.option(
+        bool,
+        "strip",
+        "Strip debug info to reduce binary size, defaults to false",
+    ) orelse false;
+    exe.root_module.strip = strip;
+
+    const raylib_dep = b.dependency("raylib", .{
+        .target = target,
+        .optimize = raylib_optimize,
+    });
+    exe.linkLibrary(raylib_dep.artifact("raylib"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
