@@ -13,6 +13,10 @@
       {
         formatter = pkgs.nixpkgs-fmt;
         devShells.default = pkgs.mkShell {
+          name = "zix";
+          packages = with pkgs; [
+            raylib
+          ];
           nativeBuildInputs = [
             zigPackage
           ];
@@ -23,11 +27,11 @@
 
           XDG_CACHE_HOME = "${placeholder "out"}";
           buildPhase = ''
-            ${pkgs.zig}/bin/zig build
+            ${zigPackage}/bin/zig build
           '';
 
           installPhase = ''
-            ${pkgs.zig}/bin/zig build install --prefix $out
+            ${zigPackage}/bin/zig build install --prefix $out
             rm -rf $out/zig
           '';
         };
