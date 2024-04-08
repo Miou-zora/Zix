@@ -16,7 +16,26 @@ pub fn interpolate_vector2(a: ray.Vector2, b: ray.Vector2, t: f32) ray.Vector2 {
     };
 }
 
-pub fn get_value_from_bezier_curve(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
+pub fn calculate_spline_segment_catmull_rom(a: ray.Vector2, b: ray.Vector2, c: ray.Vector2, d: ray.Vector2, t: f32) ray.Vector2 {
+    return ray.Vector2{
+        .x = 0.5 * ((2 * b.x) + (-a.x + c.x) * t + (2 * a.x - 5 * b.x + 4 * c.x - d.x) * t * t + (-a.x + 3 * b.x - 3 * c.x + d.x) * t * t * t),
+        .y = 0.5 * ((2 * b.y) + (-a.y + c.y) * t + (2 * a.y - 5 * b.y + 4 * c.y - d.y) * t * t + (-a.y + 3 * b.y - 3 * c.y + d.y) * t * t * t),
+    };
+}
+
+pub fn get_value_from_catmull_rom_spline(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
+    if (list_of_dots.len <= 4) {
+        return ray.Vector2{ .x = 0, .y = 0 };
+    }
+    if (t == 1) {
+        return list_of_dots[list_of_dots.len - 1];
+    } else if (t == 0) {
+        return list_of_dots[0];
+    }
+    return list_of_dots[0];
+}
+
+pub fn get_value_from_bezier_spline(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
     if (list_of_dots.len <= 1) {
         return ray.Vector2{ .x = 0, .y = 0 };
     }
@@ -76,7 +95,7 @@ fn ray_main() !void {
             for (dots) |dot| {
                 ray.DrawCircleV(dot, 10.0, ray.RED);
             }
-            try draw_spline(get_value_from_bezier_curve, &dots, ray.GREEN);
+            try draw_spline(get_value_from_catmull_rom_spline, &dots, ray.GREEN);
 
             ray.DrawFPS(width - 100, 10);
         }
