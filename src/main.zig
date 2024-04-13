@@ -95,7 +95,7 @@ fn ray_main() !void {
             for (dots) |dot| {
                 ray.DrawCircleV(dot, 10.0, ray.RED);
             }
-            try draw_spline(get_value_from_catmull_rom_spline, &dots, ray.GREEN);
+            try draw_spline(get_value_from_bezier_spline, &dots, ray.GREEN);
 
             ray.DrawFPS(width - 100, 10);
         }

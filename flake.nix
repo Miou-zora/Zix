@@ -7,13 +7,14 @@
   outputs = { self, nixpkgs, flake-utils, zig-overlay }:
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
+        # Refer to https://github.com/mitchellh/zig-overlay if you want to use a specific version of Zig
         zigPackage = zig-overlay.packages.${system}.master;
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
         formatter = pkgs.nixpkgs-fmt;
         devShells.default = pkgs.mkShell {
-          name = "zix";
+          name = "Zix";
           packages = with pkgs; [
             raylib
           ];
@@ -26,13 +27,15 @@
           src = ./.;
 
           XDG_CACHE_HOME = "${placeholder "out"}";
+
+          buildInputs = [ pkgs.raylib ];
           buildPhase = ''
             ${zigPackage}/bin/zig build
           '';
 
           installPhase = ''
             ${zigPackage}/bin/zig build install --prefix $out
-            rm -rf $out/zig
+            rm -rf $out/zig # remove cache
           '';
         };
       });
