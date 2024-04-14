@@ -60,16 +60,10 @@ direnv allow
 ## :art: <samp> <i>(Current*)</i> Result</samp>
 
 <div align="center">
-<<<<<<< HEAD
 <img src="assets/bezier.png" width="500"/>
 <img src="assets/catmull-rom.png" width="500"/></br>
 <img src="assets/linear.png" width="500"/>
-=======
-<img src="assets/bezier.png"/>
-<img src="assets/catmull-rom.png"/></br>
-<img src="assets/linear.png"/>
-<img src="assets/b-spline.png"/></br>
->>>>>>> 86a7ddb (Add B-spline)
+<img src="assets/b-spline.png" width="500"/></br>
 </div>
 
 > [!WARNING]
