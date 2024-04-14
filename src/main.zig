@@ -79,7 +79,7 @@ fn ray_main() !void {
         "Catmull-Rom",
     };
     var used_spline: u64 = 0;
-    ray.InitWindow(width, height, "zig raylib example");
+    ray.InitWindow(width, height, "Zix");
     defer ray.CloseWindow();
 
     while (!ray.WindowShouldClose()) {
