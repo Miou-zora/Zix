@@ -56,7 +56,7 @@ pub fn get_value_from_bezier_spline(list_of_dots: []ray.Vector2, t: f32) ray.Vec
     return cpy_list_of_dots[0];
 }
 
-pub fn draw_spline(pos_fn: fn (list_of_dots: []ray.Vector2, t: f32) ray.Vector2, list_of_dots: []ray.Vector2, color: ray.Color) !void {
+pub fn draw_spline(pos_fn: *const fn (list_of_dots: []ray.Vector2, t: f32) ray.Vector2, list_of_dots: []ray.Vector2, color: ray.Color) !void {
     const num_points = 100;
     var points = [_]ray.Vector2{.{ .x = 0, .y = 0 }} ** (num_points + 1);
     for (0..(num_points + 1)) |i| {
@@ -73,11 +73,16 @@ fn ray_main() !void {
 
     var dots = [_]ray.Vector2{.{ .x = 0, .y = 0 }} ** NUMBER_OF_DOTS;
 
+    const splines = comptime [_]*const fn (list_of_dots: []ray.Vector2, t: f32) ray.Vector2{ &get_value_from_bezier_spline, &get_value_from_catmull_rom_spline };
+    const splines_names = comptime [_][*:0]const u8{
+        "Bezier",
+        "Catmull-Rom",
+    };
+    var used_spline: u64 = 0;
     ray.InitWindow(width, height, "zig raylib example");
     defer ray.CloseWindow();
 
     while (!ray.WindowShouldClose()) {
-        // Update
         {
             if (ray.IsMouseButtonPressed(ray.MOUSE_BUTTON_LEFT)) {
                 for (1..(dots.len)) |i| {
@@ -85,8 +90,10 @@ fn ray_main() !void {
                 }
                 dots[0] = ray.GetMousePosition();
             }
+            if (ray.IsKeyPressed(ray.KEY_SPACE)) {
+                used_spline = @mod(used_spline + 1, splines.len);
+            }
         }
-        // Draw
         {
             ray.BeginDrawing();
             defer ray.EndDrawing();
@@ -95,7 +102,9 @@ fn ray_main() !void {
             for (dots) |dot| {
                 ray.DrawCircleV(dot, 10.0, ray.RED);
             }
-            try draw_spline(get_value_from_bezier_spline, &dots, ray.GREEN);
+            try draw_spline(splines[used_spline], &dots, ray.GREEN);
+
+            ray.DrawText(splines_names[used_spline], 10, 10, 20, ray.BLACK);
 
             ray.DrawFPS(width - 100, 10);
         }
