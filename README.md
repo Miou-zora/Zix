@@ -59,9 +59,11 @@ direnv allow
 ```
 
 ## :art: <samp> <i>(Current*)</i> Result</samp>
-
-![alt text](assets/bezier.png)
-![alt text](assets/catmull-rom.png)
+<div align="center">
+<img src="assets/bezier.png"/>
+<img src="assets/catmull-rom.png"/></br>
+<img src="assets/linear.png"/>
+</div>
 
 > [!WARNING]
 > *currenlty WIP

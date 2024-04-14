@@ -37,6 +37,22 @@ pub fn get_pos_from_catmull_rom_spline_local(list_of_dots: []ray.Vector2, t: f32
     return ray.Vector2{ .x = tx, .y = ty };
 }
 
+pub fn get_value_from_linear_spline(list_of_dots: []ray.Vector2, global_t: f32) ray.Vector2 {
+    if (list_of_dots.len <= 1) {
+        return ray.Vector2{ .x = 0, .y = 0 };
+    }
+    if (global_t == 1) {
+        return list_of_dots[list_of_dots.len - 1];
+    } else if (global_t == 0) {
+        return list_of_dots[0];
+    }
+    const local_t = global_t * @as(f32, @floatFromInt(list_of_dots.len - 1));
+    const i: usize = @intFromFloat(@floor(local_t));
+    const vec = interpolate_vector2(list_of_dots[i], list_of_dots[i + 1], local_t - @as(f32, @floatFromInt(i)));
+    return vec;
+
+}
+
 pub fn get_value_from_catmull_rom_spline(list_of_dots: []ray.Vector2, global_t: f32) ray.Vector2 {
     if (list_of_dots.len <= 3) {
         return ray.Vector2{ .x = 0, .y = 0 };
@@ -74,7 +90,7 @@ pub fn get_value_from_bezier_spline(list_of_dots: []ray.Vector2, t: f32) ray.Vec
 }
 
 pub fn draw_spline(pos_fn: *const fn (list_of_dots: []ray.Vector2, t: f32) ray.Vector2, list_of_dots: []ray.Vector2, color: ray.Color) !void {
-    const num_points = 100;
+    const num_points = 500;
     var points = [_]ray.Vector2{.{ .x = 0, .y = 0 }} ** (num_points + 1);
     for (0..(num_points + 1)) |i| {
         points[i] = pos_fn(list_of_dots, @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(num_points)));
@@ -90,10 +106,15 @@ fn ray_main() !void {
 
     var dots = [_]ray.Vector2{.{ .x = 0, .y = 0 }} ** NUMBER_OF_DOTS;
 
-    const splines = comptime [_]*const fn (list_of_dots: []ray.Vector2, t: f32) ray.Vector2{ &get_value_from_bezier_spline, &get_value_from_catmull_rom_spline };
+    const splines = comptime [_]*const fn (list_of_dots: []ray.Vector2, t: f32) ray.Vector2{
+        &get_value_from_bezier_spline,
+        &get_value_from_catmull_rom_spline,
+        &get_value_from_linear_spline,
+    };
     const splines_names = comptime [_][*:0]const u8{
         "Bezier",
         "Catmull-Rom",
+        "Linear",
     };
     var used_spline: u64 = 0;
     ray.InitWindow(width, height, "Zix");
@@ -123,7 +144,7 @@ fn ray_main() !void {
 
             ray.DrawText(splines_names[used_spline], 10, 10, 20, ray.BLACK);
 
-                ray.DrawFPS(width - 100, 10);
+            ray.DrawFPS(width - 100, 10);
         }
     }
 }
