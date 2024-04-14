@@ -7,7 +7,7 @@ I will try to implement these functions:
 - :triangular_flag_on_post: Hermite
 - :white_check_mark: Catmull-Rom
 - :triangular_flag_on_post: B-Spline
-- :triangular_flag_on_post: Linear
+- :white_check_mark: Linear
 
 ## :bookmark_tabs: <samp>Requirements</samp>
 
