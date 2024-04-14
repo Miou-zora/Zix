@@ -16,23 +16,40 @@ pub fn interpolate_vector2(a: ray.Vector2, b: ray.Vector2, t: f32) ray.Vector2 {
     };
 }
 
-pub fn calculate_spline_segment_catmull_rom(a: ray.Vector2, b: ray.Vector2, c: ray.Vector2, d: ray.Vector2, t: f32) ray.Vector2 {
-    return ray.Vector2{
-        .x = 0.5 * ((2 * b.x) + (-a.x + c.x) * t + (2 * a.x - 5 * b.x + 4 * c.x - d.x) * t * t + (-a.x + 3 * b.x - 3 * c.x + d.x) * t * t * t),
-        .y = 0.5 * ((2 * b.y) + (-a.y + c.y) * t + (2 * a.y - 5 * b.y + 4 * c.y - d.y) * t * t + (-a.y + 3 * b.y - 3 * c.y + d.y) * t * t * t),
-    };
+// https://www.youtube.com/watch?v=9_aJGUTePYo
+pub fn get_pos_from_catmull_rom_spline_local(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
+    const p1 = @as(usize, @intFromFloat(@floor(t))) + 1;
+    const p2 = p1 + 1;
+    const p3 = p2 + 1;
+    const p0 = p1 - 1;
+
+    const tt = t * t;
+    const ttt = tt * t;
+
+    const q1 = -ttt + 2.0 * tt - t;
+    const q2 = 3.0 * ttt - 5.0 * tt + 2.0;
+    const q3 = -3.0 * ttt + 4.0 * tt + t;
+    const q4 = ttt - tt;
+
+    const tx = 0.5 * (list_of_dots[p0].x * q1 + list_of_dots[p1].x * q2 + list_of_dots[p2].x * q3 + list_of_dots[p3].x * q4);
+    const ty = 0.5 * (list_of_dots[p0].y * q1 + list_of_dots[p1].y * q2 + list_of_dots[p2].y * q3 + list_of_dots[p3].y * q4);
+
+    return ray.Vector2{ .x = tx, .y = ty };
 }
 
-pub fn get_value_from_catmull_rom_spline(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
-    if (list_of_dots.len <= 4) {
+pub fn get_value_from_catmull_rom_spline(list_of_dots: []ray.Vector2, global_t: f32) ray.Vector2 {
+    if (list_of_dots.len <= 3) {
         return ray.Vector2{ .x = 0, .y = 0 };
     }
-    if (t == 1) {
+    if (global_t == 1) {
         return list_of_dots[list_of_dots.len - 1];
-    } else if (t == 0) {
+    } else if (global_t == 0) {
         return list_of_dots[0];
     }
-    return list_of_dots[0];
+    const local_t = global_t * @as(f32, @floatFromInt(list_of_dots.len - 3));
+    const i: usize = @intFromFloat(@floor(local_t));
+    const vec = get_pos_from_catmull_rom_spline_local(list_of_dots[i..(i + 4)], local_t - @as(f32, @floatFromInt(i)));
+    return vec;
 }
 
 pub fn get_value_from_bezier_spline(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
@@ -106,7 +123,7 @@ fn ray_main() !void {
 
             ray.DrawText(splines_names[used_spline], 10, 10, 20, ray.BLACK);
 
-            ray.DrawFPS(width - 100, 10);
+                ray.DrawFPS(width - 100, 10);
         }
     }
 }

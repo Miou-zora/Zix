@@ -60,8 +60,8 @@ direnv allow
 
 ## :art: <samp> <i>(Current*)</i> Result</samp>
 
-![alt text](image.png)
+![alt text](assets/bezier.png)
+![alt text](assets/catmull-rom.png)
 
 > [!WARNING]
 > *currenlty WIP
-
