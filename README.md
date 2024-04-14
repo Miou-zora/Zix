@@ -59,10 +59,11 @@ direnv allow
 ```
 
 ## :art: <samp> <i>(Current*)</i> Result</samp>
+
 <div align="center">
-<img src="assets/bezier.png"/>
-<img src="assets/catmull-rom.png"/></br>
-<img src="assets/linear.png"/>
+<img src="assets/bezier.png" width="500"/>
+<img src="assets/catmull-rom.png" width="500"/></br>
+<img src="assets/linear.png" width="500"/>
 </div>
 
 > [!WARNING]
