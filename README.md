@@ -5,7 +5,7 @@ Zix is a spline visualizer written in zig that use Raylib for rendering and Nix 
 I will try to implement these functions:
 - :white_check_mark: Bézier
 - :white_check_mark: Catmull-Rom
-- :triangular_flag_on_post: B-Spline
+- :white_check_mark: B-Spline
 - :white_check_mark: Linear
 
 ## :bookmark_tabs: <samp>Requirements</samp>
@@ -60,9 +60,16 @@ direnv allow
 ## :art: <samp> <i>(Current*)</i> Result</samp>
 
 <div align="center">
+<<<<<<< HEAD
 <img src="assets/bezier.png" width="500"/>
 <img src="assets/catmull-rom.png" width="500"/></br>
 <img src="assets/linear.png" width="500"/>
+=======
+<img src="assets/bezier.png"/>
+<img src="assets/catmull-rom.png"/></br>
+<img src="assets/linear.png"/>
+<img src="assets/b-spline.png"/></br>
+>>>>>>> 86a7ddb (Add B-spline)
 </div>
 
 > [!WARNING]

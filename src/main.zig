@@ -37,6 +37,37 @@ pub fn get_pos_from_catmull_rom_spline_local(list_of_dots: []ray.Vector2, t: f32
     return ray.Vector2{ .x = tx, .y = ty };
 }
 
+pub fn get_pos_from_b_spline_local(list_of_dots: []ray.Vector2, t: f32) ray.Vector2 {
+    const tt = t * t;
+    const ttt = tt * t;
+
+    const q1 = (-ttt + 3.0 * tt - 3.0 * t + 1.0) / 6.0;
+    const q2 = (3.0 * ttt - 6.0 * tt + 4.0) / 6.0;
+    const q3 = (-3.0 * ttt + 3.0 * tt + 3.0 * t + 1.0) / 6.0;
+    const q4 = ttt / 6.0;
+
+    const tx = q1 * list_of_dots[0].x + q2 * list_of_dots[1].x + q3 * list_of_dots[2].x + q4 * list_of_dots[3].x;
+    const ty = q1 * list_of_dots[0].y + q2 * list_of_dots[1].y + q3 * list_of_dots[2].y + q4 * list_of_dots[3].y;
+
+    return ray.Vector2{ .x = tx, .y = ty };
+
+}
+
+pub fn get_value_from_b_spline(list_of_dots: []ray.Vector2, global_t: f32) ray.Vector2 {
+    if (list_of_dots.len <= 3) {
+        return ray.Vector2{ .x = 0, .y = 0 };
+    }
+    if (global_t == 1) {
+        return list_of_dots[list_of_dots.len - 1];
+    } else if (global_t == 0) {
+        return list_of_dots[0];
+    }
+    const local_t = global_t * @as(f32, @floatFromInt(list_of_dots.len - 3));
+    const i: usize = @intFromFloat(@floor(local_t));
+    const vec = get_pos_from_b_spline_local(list_of_dots[i..(i + 4)], local_t - @as(f32, @floatFromInt(i)));
+    return vec;
+}
+
 pub fn get_value_from_linear_spline(list_of_dots: []ray.Vector2, global_t: f32) ray.Vector2 {
     if (list_of_dots.len <= 1) {
         return ray.Vector2{ .x = 0, .y = 0 };
@@ -110,11 +141,13 @@ fn ray_main() !void {
         &get_value_from_bezier_spline,
         &get_value_from_catmull_rom_spline,
         &get_value_from_linear_spline,
+        &get_value_from_b_spline,
     };
     const splines_names = comptime [_][*:0]const u8{
         "Bezier",
         "Catmull-Rom",
         "Linear",
+        "B-Spline",
     };
     var used_spline: u64 = 0;
     ray.InitWindow(width, height, "Zix");
