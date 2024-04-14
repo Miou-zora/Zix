@@ -2,6 +2,13 @@
 
 Zix is a spline visualizer written in zig that use Raylib for rendering and Nix for dev-env.
 
+I will try to implement these functions:
+- :white_check_mark: Bézier
+- :triangular_flag_on_post: Hermite
+- :pencil2: Catmull-Rom
+- :triangular_flag_on_post: B-Spline
+- :triangular_flag_on_post: Linear
+
 ## :bookmark_tabs: <samp>Requirements</samp>
 
 - :cherry_blossom: [Nix](https://nixos.org/download.html)
@@ -11,7 +18,7 @@ Zix is a spline visualizer written in zig that use Raylib for rendering and Nix 
 > If you get an error about it, consider this command:
 > `mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" | tee ~/.config/nix/nix.conf`
 
-## <samp>Usage</samp>
+## :zap: <samp>Usage</samp>
 
 ### :wrench: <samp>Setup</samp>
 
@@ -28,7 +35,7 @@ zig build
 ```
 
 
-### :zap: <samp>Running</samp>
+### :rocket: <samp>Running</samp>
 
 
 ```shell
@@ -51,8 +58,10 @@ echo "use flake" | tee .envrc
 direnv allow
 ```
 
-## <samp> <i>(Current)</i> Result</samp>
+## :art: <samp> <i>(Current*)</i> Result</samp>
 
 ![alt text](image.png)
 
+> [!WARNING]
+> *currenlty WIP
 
