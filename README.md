@@ -57,7 +57,7 @@ echo "use flake" | tee .envrc
 direnv allow
 ```
 
-## :art: <samp> <i>(Current*)</i> Result</samp>
+## :art: <samp> Result</samp>
 
 <div align="center">
 <img src="assets/bezier.png" width="500"/>
@@ -65,6 +65,3 @@ direnv allow
 <img src="assets/linear.png" width="500"/>
 <img src="assets/b-spline.png" width="500"/></br>
 </div>
-
-> [!WARNING]
-> *currenlty WIP
