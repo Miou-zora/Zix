@@ -5,7 +5,7 @@ Zix is a spline visualizer written in zig that use Raylib for rendering and Nix 
 I will try to implement these functions:
 - :white_check_mark: Bézier
 - :triangular_flag_on_post: Hermite
-- :pencil2: Catmull-Rom
+- :white_check_mark: Catmull-Rom
 - :triangular_flag_on_post: B-Spline
 - :triangular_flag_on_post: Linear
 
